@@ -42,7 +42,7 @@ byte display = -1;
 unsigned long trainMessageTimer = 0;
 int stationIndex = 0;
 bool trainSequenceActive = false;
-const unsigned long TRAIN_MESSAGE_INTERVAL = 18000; // Set delay time (in ms) between each LED message.
+const unsigned long TRAIN_MESSAGE_INTERVAL = 17000; // Set delay time (in ms) between each LED message.
 
 const int* activeStationRoute = nullptr;
 int activeStationRouteLength = 0;
@@ -123,6 +123,8 @@ void setup() {
   initializeLed();
 }
 
+const char* buffer = "                      ";
+
 const char* stations[] = { 
                         // Odakyu Main Line
                         "Shinjuku (OH-01)", "Minami-Shinjuku (OH-02)", "Sangubashi (OH-03)", "Yoyogi-Hachiman (OH-04)",
@@ -195,56 +197,67 @@ void startTrainSequence(const int* route, int routeLength, String introMessage) 
 
 void startLocal1TrainSequence() {
   localLED();
-  startTrainSequence(localStation1, localStation1Length, String("The local train bound for Hon-Atsugi.            "));
+  startTrainSequence(localStation1, localStation1Length, String("The local train bound for Hon-Atsugi." + String(buffer)));
 }
 
 void startLocal2TrainSequence() {
   localLED();
-  startTrainSequence(localStation2, localStation2Length, String("The local train bound for Karakida.            "));
+  startTrainSequence(localStation2, localStation2Length, String("The local train bound for Karakida." + String(buffer)));
 }
 
 void startLocal3TrainSequence() {
   localLED();
-  startTrainSequence(localStation3, localStation3Length, String("The local train bound for Katase-Enoshima.            "));
+  startTrainSequence(localStation3, localStation3Length, String("The local train bound for Katase-Enoshima." + String(buffer)));
 }
 
 void startLocalExp1TrainSequence() {
   expressLED();
-  startTrainSequence(localExpStation1, localExpStation1Length, String("The express bound for Odawara.            "));
+  startTrainSequence(localExpStation1, localExpStation1Length, String("The express bound for Odawara." + String(buffer)));
 }
 
 void startExpress1TrainSequence() {
   expressLED();
-  startTrainSequence(expressStation1, expressStation1Length, String("The express bound for Karakida.            "));
+  startTrainSequence(expressStation1, expressStation1Length, String("The express bound for Karakida." + String(buffer)));
 }
 
 void startExpress2TrainSequence() {
   expressLED();
-  startTrainSequence(expressStation2, expressStation2Length, String("The express bound for Shinjuku.            "));
+  startTrainSequence(expressStation2, expressStation2Length, String("The express bound for Shinjuku." + String(buffer)));
 }
 
 void startRapid1TrainSequence() {
   rapidLED();
-  startTrainSequence(rapidexStation1, rapidexStation1Length, String("The rapid-express bound for Odawara.            "));
+  startTrainSequence(rapidexStation1, rapidexStation1Length, String("The rapid-express bound for Odawara." + String(buffer)));
 }
 
 void startRapid2TrainSequence() {
   rapidLED();
-  startTrainSequence(rapidexStation2, rapidexStation2Length, String("The rapid-express bound for Fujisawa.            "));
+  startTrainSequence(rapidexStation2, rapidexStation2Length, String("The rapid-express bound for Fujisawa." + String(buffer)));
 }
 
 void restartActiveTrainSequence() {
   if (activeStationRoute == localStation1) {
     startLocal1TrainSequence();
-  } else if (activeStationRoute == localExpStation1) {
+  } 
+  else if (activeStationRoute == localStation2) {
+    startLocal2TrainSequence();
+  } 
+  else if (activeStationRoute == localStation3) {
+    startLocal3TrainSequence();
+  } 
+  else if (activeStationRoute == localExpStation1) {
     startLocalExp1TrainSequence();
-  } else if (activeStationRoute == expressStation1) {
+  } 
+  else if (activeStationRoute == expressStation1) {
     startExpress1TrainSequence();
-  } else if (activeStationRoute == expressStation2) {
+  } 
+  else if (activeStationRoute == expressStation2) {
     startExpress2TrainSequence();
-  } else if (activeStationRoute == rapidexStation1) {
+  } 
+  else if (activeStationRoute == rapidexStation1) {
     startRapid1TrainSequence();
-  } else if (activeStationRoute == rapidexStation2) {
+  } 
+  else if (activeStationRoute == rapidexStation2) {
     startRapid2TrainSequence();
   }
 }
@@ -260,7 +273,7 @@ void updateTrainSequence() {
 
   if (stationIndex >= activeStationRouteLength) {
     initializeLed();
-    delay(100);
+    delay(300);
     restartActiveTrainSequence();
     return;
   }
@@ -271,7 +284,7 @@ void updateTrainSequence() {
     localExpBlueActive = true;
   }
 
-  run.setText(String("The next stop is ") + stations[activeStationRoute[stationIndex]] + ".                ");
+  run.setText(String("The next stop is ") + stations[activeStationRoute[stationIndex]] + "." + String(buffer));
   run.start();
   stationIndex++;
   trainMessageTimer = millis();
