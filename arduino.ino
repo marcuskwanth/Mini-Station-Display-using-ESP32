@@ -99,7 +99,7 @@ void setup() {
   mtrx.setBright(1);
   mtrx.clear();
   run.setText("Welcome Aboard!");
-  run.setSpeed(15);      // pixel per second
+  run.setSpeed(LED_SPD);      // pixel per second
   run.start();
 
   // Initialize LCD
